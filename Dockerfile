@@ -40,6 +40,17 @@ RUN /etc/init.d/mysql start \
         --database "mysql" --database-name "owncloud"  --database-user "owncloud" --database-pass "owncloud" \
         --admin-user "admin" --admin-pass "password"
 
+# Enable and configure owncloud ldap app
+RUN /etc/init.d/mysql start \
+ && cd /var/www/html \
+ && sudo -u www-data php occ app:enable user_ldap \
+ && sudo -u www-data php occ ldap:create-empty-config \
+ && sudo -u www-data php occ ldap:set-config "" "ldapHost" "172.17.0.1" \
+ && sudo -u www-data php occ ldap:set-config "" "ldapPort" "10000" \
+ && sudo -u www-data php occ ldap:set-config "" "ldapAgentName" "uid=admin,ou=system" \
+ && sudo -u www-data php occ ldap:set-config "" "ldapAgentPassword" "admin123" \
+ && sudo -u www-data php occ ldap:set-config "" "ldapBase" "ou=system"
+
 # Supervisor configuration
 ADD supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN mkdir -p /var/log/supervisord
