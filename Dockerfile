@@ -36,6 +36,7 @@ RUN mkdir -p /var/log/supervisord
 
 # Add entrypoint script
 ADD entrypoint.sh /opt/entrypoint.sh
+ADD secrets /opt/.secrets
 RUN chmod u+x /opt/entrypoint.sh
 
 # Expose volumes

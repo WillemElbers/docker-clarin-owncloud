@@ -13,28 +13,39 @@ DEFAULT_LDAP_USER_PASSWORD="admin123"
 DEFAULT_LDAP_BASE_DN="ou=system"
 
 DATABASE_USER=${DATABASE_USER:-$DEFAULT_DATABASE_USER}
-DATABASE_PASSWORD=${DATABASE_PASSWORD:-$DEFAULT_DATABASE_PASSWORD}
 DATABASE_NAME=${DATABASE_NAME:-$DEFAULT_DATABASE_NAME}
 OWNCLOUD_ADMIN=${OWNCLOUD_ADMIN:-$DEFAULT_OWNCLOUD_ADMIN}
-OWNCLOUD_ADMIN_PASSWORD=${OWNCLOUD_ADMIN_PASSWORD:-$DEFAULT_OWNCLOUD_ADMIN_PASSWORD}
 LDAP_HOST=${LDAP_HOST:-$DEFAULT_LDAP_HOST}
 LDAP_PORT=${LDAP_PORT:-$DEFAULT_LDAP_PORT}
 LDAP_USER_DN=${LDAP_USER_DN:-$DEFAULT_LDAP_USER_DN}
-LDAP_USER_PASSWORD=${LDAP_USER_PASSWORD:-$DEFAULT_LDAP_USER_PASSWORD}
 LDAP_BASE_DN=${LDAP_BASE_DN:-$DEFAULT_LDAP_BASE_DN}
 
+if [ -f /opt/.secrets ];
+then
+    source /opt/.secrets
+fi
+
+DATABASE_PASSWORD=${DATABASE_PASSWORD:-$DEFAULT_DATABASE_PASSWORD}
+OWNCLOUD_ADMIN_PASSWORD=${OWNCLOUD_ADMIN_PASSWORD:-$DEFAULT_OWNCLOUD_ADMIN_PASSWORD}
+LDAP_USER_PASSWORD=${LDAP_USER_PASSWORD:-$DEFAULT_LDAP_USER_PASSWORD}
+
 initialize() {
-    echo "Initializing"
-    echo "    ${DATABASE_USER}"
-    echo "    ${DATABASE_PASSWORD}"
-    echo "    ${DATABASE_NAME}"
-    echo "    ${OWNCLOUD_ADMIN}"
-    echo "    ${OWNCLOUD_ADMIN_PASSWORD}"
-    echo "    ${LDAP_HOST}"
-    echo "    ${LDAP_PORT}"
-    echo "    ${LDAP_USER_DN}"
-    echo "    ${LDAP_USER_PASSWORD}"
-    echo "    ${LDAP_BASE_DN}"
+    echo ""
+    echo "********************"
+    echo "*** Initializing ***"
+    echo "********************"
+    echo ""
+    echo "    DATABASE_USER=${DATABASE_USER}"
+    echo "    DATABASE_PASSWORD=******"
+    echo "    DATABASE_NAME=${DATABASE_NAME}"
+    echo "    OWNCLOUD_ADMIN=${OWNCLOUD_ADMIN}"
+    echo "    OWNCLOUD_ADMIN_PASSWORD=******"
+    echo "    LDAP_HOST=${LDAP_HOST}"
+    echo "    LDAP_PORT=${LDAP_PORT}"
+    echo "    LDAP_USER_DN=${LDAP_USER_DN}"
+    echo "    LDAP_USER_PASSWORD=******"
+    echo "    LDAP_BASE_DN=${LDAP_BASE_DN}"
+    echo ""
 
     # Start database
     /etc/init.d/mysql start
@@ -69,7 +80,11 @@ initialize() {
 }
 
 start() {
-    echo "Starting supervisor"
+    echo ""
+    echo "****************************"
+    echo " *** Starting supervisor ***"
+    echo "****************************"
+    echo ""
 
     unset DATABASE_PASSWORD
     unset OWNCLOUD_ADMIN_PASSWORD
