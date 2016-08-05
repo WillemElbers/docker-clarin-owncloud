@@ -22,6 +22,7 @@ LDAP_BASE_DN=${LDAP_BASE_DN:-$DEFAULT_LDAP_BASE_DN}
 
 if [ -f /opt/.secrets ];
 then
+    chmod 0600 /opt/.secrets
     source /opt/.secrets
 fi
 

@@ -48,6 +48,18 @@ docker run -ti --rm \
 	docker.clarin.eu/owncloud:1.0.0
 ```
 
+docker run -ti --rm \
+    -p 80:80 -p 443:443 \
+    -e "DATABASE_USER=value" \
+    -e "DATABASE_NAME=value" \
+    -e "OWNCLOUD_ADMIN=value" \
+    -e "LDAP_HOST=value" \
+    -e "LDAP_PORT=value" \
+    -e "LDAP_USER_DN=value" \
+    -e "LDAP_BASE_DN=value" \
+    -v /Users/wilelb/Code/work/clarin/git/infrastructure/docker-owncloud/secrets_test:/opt/.secrets \
+    docker.clarin.eu/owncloud:1.0.0
+    
 ## Data persistence
 
 Exposed volumes:

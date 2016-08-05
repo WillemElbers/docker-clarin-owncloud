@@ -16,6 +16,7 @@ RUN cd /opt \
  && tar -jxf owncloud-9.1.0.tar.bz2 \
  && rm -r /var/www/html \
  && mv /opt/owncloud /var/www/html \
+ && mkdir -p /var/www/html/data \
  && chown -R www-data:www-data /var/www/html \
  && rm /opt/owncloud-9.1.0.tar.bz2
 
@@ -37,10 +38,13 @@ RUN mkdir -p /var/log/supervisord
 # Add entrypoint script
 ADD entrypoint.sh /opt/entrypoint.sh
 ADD secrets /opt/.secrets
-RUN chmod u+x /opt/entrypoint.sh
+RUN chmod u+x /opt/entrypoint.sh \
+ && chmod 0600 /opt/.secrets
 
 # Expose volumes
 VOLUME ["/var/lib/mysql", "/var/www/html/data"]
+
+RUN chown -R www-data:www-data /var/www/html
 
 # Export the unity main port
 EXPOSE 80 443
