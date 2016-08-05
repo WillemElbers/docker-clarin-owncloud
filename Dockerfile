@@ -40,7 +40,7 @@ ADD secrets /opt/.secrets
 RUN chmod u+x /opt/entrypoint.sh
 
 # Expose volumes
-VOLUME ["/var/lib/mysql"]
+VOLUME ["/var/lib/mysql", "/var/www/html/data"]
 
 # Export the unity main port
 EXPOSE 80 443

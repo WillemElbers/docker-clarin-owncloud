@@ -1,6 +1,6 @@
 # Owncloud docker container
 
-this projects builds a debian based image running [owncloud-9.1.0](https://doc.owncloud.org/).
+this projects builds a debian based image running [owncloud-9.1.0](https://doc.owncloud.org/) with the ldap plugin enabled and configured.
 
 # Running 
 
@@ -46,6 +46,15 @@ docker run -ti --rm \
 	-e "LDAP_BASE_DN=value" \
 	-v /home/user/.secrets:/opt/.secrets \
 	docker.clarin.eu/owncloud:1.0.0
+```
+
+## Data persistence
+
+Exposed volumes:
+
+```
+/var/lib/mysql             # MySql data files
+/var/www/html/data         # OwnCloud data files
 ```
 
 #References
