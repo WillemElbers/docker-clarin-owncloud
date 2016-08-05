@@ -14,23 +14,25 @@ docker run -ti --rm -p 80:80 -p 443:443 docker.clarin.eu/owncloud:1.0.0
 
 Simple variables are managed via container environment variables, passed to the container via the '-e` parameter. If a variable is not supplied, the default value is used. The following variables are supported:
 
-| Variable                 | Description                             |
-| ------------------------ | --------------------------------------- |
-| DATABASE_USER            | Owncloud database username              |
-| DATABASE_NAME            | Owncloud database name                  |
-| OWNCLOUD_ADMIN           | Owncloud administrator username         |
-| LDAP_HOST                | LDAP hostname or ip address             | 
-| LDAP_PORT                | LDAP port                               |
-| LDAP_USER\_DN            | LDAP DN for user with search permission |
-| LDAP_BASE\_DN            | LDAP base DN                            |
+| Variable                 | Default Value       | Description                             | 
+| ------------------------ | ------------------- | --------------------------------------- |
+| DATABASE_USER            | owncloud            | Owncloud database username              |
+| DATABASE_NAME            | owncloud            | Owncloud database name                  |
+| OWNCLOUD_ADMIN           | admin               | Owncloud administrator username         |
+| LDAP_HOST                | 172.17.0.1          | LDAP hostname or ip address             | 
+| LDAP_PORT                | 10000               | LDAP port                               |
+| LDAP_USER\_DN            | uid=admin,ou=system | LDAP DN for user with search permission |
+| LDAP_BASE\_DN            | ou=system           |LDAP base DN                            |
 
 Secrets are not managed via container environment variables as these are leaked via the `docker inspect` command, see [1]. Until a better approach is available secrets are specified in the `/opt/.secrets` file. Provide a host mounted file to override the defaults.
 
-| Variable                 | Description                             |
-| ------------------------ | --------------------------------------- |
-| DATABASE_PASSWORD        | Owncloud database password              |
-| OWNCLOUD_ADMIN\_PASSWORD | Owncloud administrator password         |
-| LDAP_USER\_PASSWORD      | Password for the ldap user              | 
+| Variable                 | Default Value       | Description                             |
+| ------------------------ | ------------------- | --------------------------------------- |
+| DATABASE_PASSWORD        | owncloud            | Owncloud database password              |
+| OWNCLOUD_ADMIN\_PASSWORD | password            | Owncloud administrator password         |
+| LDAP_USER\_PASSWORD      | admin123            | Password for the ldap user              | 
+
+Note: we strongly recommend that your change the default values for these secrets!
 
 Running a customized owncloud instance:
 
@@ -47,18 +49,11 @@ docker run -ti --rm \
 	-v /home/user/.secrets:/opt/.secrets \
 	docker.clarin.eu/owncloud:1.0.0
 ```
+ 
+Where:
 
-docker run -ti --rm \
-    -p 80:80 -p 443:443 \
-    -e "DATABASE_USER=value" \
-    -e "DATABASE_NAME=value" \
-    -e "OWNCLOUD_ADMIN=value" \
-    -e "LDAP_HOST=value" \
-    -e "LDAP_PORT=value" \
-    -e "LDAP_USER_DN=value" \
-    -e "LDAP_BASE_DN=value" \
-    -v /Users/wilelb/Code/work/clarin/git/infrastructure/docker-owncloud/secrets_test:/opt/.secrets \
-    docker.clarin.eu/owncloud:1.0.0
+* `/home/user/.secrets` is the path to your local secrets file
+* all `value` fields are replaced with appropriate values.
     
 ## Data persistence
 
