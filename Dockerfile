@@ -33,18 +33,22 @@ ADD apache/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
 
 # Supervisor configuration
 ADD supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-RUN mkdir -p /var/log/supervisord
+RUN useradd -s /bin/bash supervisor \
+ && mkdir -p /var/log/supervisord \
+ && mkdir -p /var/run/supervisord \
+ && chown -R supervisor /var/log/supervisord \
+ && chown -R supervisor /etc/supervisor \
+ && chown -R supervisor /var/run/supervisord
 
 # Add entrypoint script
 ADD entrypoint.sh /opt/entrypoint.sh
 ADD secrets /opt/.secrets
-RUN chmod u+x /opt/entrypoint.sh \
+RUN chown supervisor /opt/* \
+ && chmod u+x /opt/entrypoint.sh \
  && chmod 0600 /opt/.secrets
 
 # Expose volumes
 VOLUME ["/var/lib/mysql", "/var/www/html/data"]
-
-RUN chown -R www-data:www-data /var/www/html
 
 # Export the unity main port
 EXPOSE 80 443
