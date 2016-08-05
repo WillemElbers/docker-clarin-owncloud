@@ -30,30 +30,13 @@ RUN a2enmod rewrite \
 ADD apache/000-default.conf /etc/apache2/sites-available/000-default.conf
 ADD apache/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
 
-# Configure mariadb and owncloud
-RUN /etc/init.d/mysql start \
- && mysql -e "CREATE USER 'owncloud'@'%' IDENTIFIED BY 'owncloud';" \
- && mysql -e "CREATE DATABASE owncloud;" \
- && mysql -e "GRANT ALL PRIVILEGES ON owncloud.* TO 'owncloud'@'%';" \
- && cd /var/www/html \
- && sudo -u www-data php occ maintenance:install \
-        --database "mysql" --database-name "owncloud"  --database-user "owncloud" --database-pass "owncloud" \
-        --admin-user "admin" --admin-pass "password"
-
-# Enable and configure owncloud ldap app
-RUN /etc/init.d/mysql start \
- && cd /var/www/html \
- && sudo -u www-data php occ app:enable user_ldap \
- && sudo -u www-data php occ ldap:create-empty-config \
- && sudo -u www-data php occ ldap:set-config "" "ldapHost" "172.17.0.1" \
- && sudo -u www-data php occ ldap:set-config "" "ldapPort" "10000" \
- && sudo -u www-data php occ ldap:set-config "" "ldapAgentName" "uid=admin,ou=system" \
- && sudo -u www-data php occ ldap:set-config "" "ldapAgentPassword" "admin123" \
- && sudo -u www-data php occ ldap:set-config "" "ldapBase" "ou=system"
-
 # Supervisor configuration
 ADD supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN mkdir -p /var/log/supervisord
+
+# Add entrypoint script
+ADD entrypoint.sh /opt/entrypoint.sh
+RUN chmod u+x /opt/entrypoint.sh
 
 # Expose volumes
 VOLUME ["/var/lib/mysql"]
@@ -62,4 +45,4 @@ VOLUME ["/var/lib/mysql"]
 EXPOSE 80 443
 
 # Run supervisor
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["/opt/entrypoint.sh"]
