@@ -40,6 +40,8 @@ RUN useradd -s /bin/bash supervisor \
  && chown -R supervisor /etc/supervisor \
  && chown -R supervisor /var/run/supervisord
 
+RUN mkdir -p /opt/initialisation
+
 # Add entrypoint script
 ADD entrypoint.sh /opt/entrypoint.sh
 ADD secrets /opt/.secrets
@@ -48,7 +50,7 @@ RUN chown supervisor /opt/* \
  && chmod 0600 /opt/.secrets
 
 # Expose volumes
-VOLUME ["/var/lib/mysql", "/var/www/html/data"]
+VOLUME ["/var/lib/mysql", "/var/www/html/data", "/opt/initialisation"]
 
 # Export the unity main port
 EXPOSE 80 443
