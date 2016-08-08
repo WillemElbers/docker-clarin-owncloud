@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+INITIALISATION_FILE="/opt/initialisation/initialised"
+
 DEFAULT_DATABASE_USER="owncloud"
 DEFAULT_DATABASE_PASSWORD="owncloud"
 DEFAULT_DATABASE_NAME="owncloud"
@@ -51,6 +53,13 @@ initialize() {
     # Start database
     /etc/init.d/mysql start
 
+    #USER_EXISTS=$(mysql -e  "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '${DATABASE_USER}')" mysql)
+    #if [ ${USER_EXISTS} == 1 ]; then
+    #    echo "Exists"
+    #else
+    #    echo "Does not exist"
+    #fi
+
     # Initialize mysql database
     echo "Initializing mysql database"
     mysql -e "CREATE USER '${DATABASE_USER}'@'%' IDENTIFIED BY '${DATABASE_PASSWORD}';"
@@ -74,7 +83,7 @@ initialize() {
     sudo -u www-data php occ ldap:set-config "" "ldapAgentPassword" "${LDAP_USER_PASSWORD}"
     sudo -u www-data php occ ldap:set-config "" "ldapBase" "${LDAP_BASE_DN}"
 
-    touch /opt/initialized
+    echo "initialized" >> ${INITIALISATION_FILE}
 
     # Stop database
     /etc/init.d/mysql stop
@@ -93,7 +102,7 @@ start() {
     /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
 }
 
-if [ -f /opt/initialized ]; then
+if [ -f ${INITIALISATION_FILE} ]; then
     start
 else
     initialize
