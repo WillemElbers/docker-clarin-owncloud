@@ -82,6 +82,32 @@ initialize() {
     sudo -u www-data php occ ldap:set-config "" "ldapAgentName" "${LDAP_USER_DN}"
     sudo -u www-data php occ ldap:set-config "" "ldapAgentPassword" "${LDAP_USER_PASSWORD}"
     sudo -u www-data php occ ldap:set-config "" "ldapBase" "${LDAP_BASE_DN}"
+    sudo -u www-data php occ ldap:set-config "" "ldapBaseGroups" "ou=groups"
+    sudo -u www-data php occ ldap:set-config "" "ldapBaseUsers" "ou=users"
+    sudo -u www-data php occ ldap:set-config "" "ldapLoginFilter" "(&(|(objectclass=inetOrgPerson))(|(mailPrimaryAddress=%uid)(mail=%uid)))"
+    sudo -u www-data php occ ldap:set-config "" "hasMemberOfFilterSupport" "0"
+    sudo -u www-data php occ ldap:set-config "" "lastJpegPhotoLookup" "0"
+    sudo -u www-data php occ ldap:set-config "" "ldapCacheTTL" "600"
+    sudo -u www-data php occ ldap:set-config "" "ldapConfigurationActive" "1"
+    sudo -u www-data php occ ldap:set-config "" "ldapExperiencedAdmin" "0"
+    sudo -u www-data php occ ldap:set-config "" "ldapGroupDisplayName" "cn"
+    sudo -u www-data php occ ldap:set-config "" "ldapGroupFilterMode" "0"
+    sudo -u www-data php occ ldap:set-config "" "ldapGroupMemberAssocAttr" "uniqueMember"
+    sudo -u www-data php occ ldap:set-config "" "ldapLoginFilterEmail" "0"
+    sudo -u www-data php occ ldap:set-config "" "ldapLoginFilterMode" "0"
+    sudo -u www-data php occ ldap:set-config "" "ldapLoginFilterUsername" "1"
+    sudo -u www-data php occ ldap:set-config "" "ldapNestedGroups" "0"
+    sudo -u www-data php occ ldap:set-config "" "ldapPagingSize" "500"
+    sudo -u www-data php occ ldap:set-config "" "ldapPort" "10000"
+    sudo -u www-data php occ ldap:set-config "" "ldapTLS" "0"
+    sudo -u www-data php occ ldap:set-config "" "ldapUserDisplayName" "mail"
+    sudo -u www-data php occ ldap:set-config "" "ldapUserFilter" "(|(objectclass=inetorgperson))"
+    sudo -u www-data php occ ldap:set-config "" "ldapUserFilterMode" "0"
+    sudo -u www-data php occ ldap:set-config "" "ldapUserFilterObjectclass" "person"
+    sudo -u www-data php occ ldap:set-config "" "ldapUuidGroupAttribute" "auto"
+    sudo -u www-data php occ ldap:set-config "" "ldapUuidUserAttribute" "auto"
+    sudo -u www-data php occ ldap:set-config "" "turnOffCertCheck" "0"
+    sudo -u www-data php occ ldap:set-config "" "useMemberOfToDetectMembership" "1"
 
     echo "initialized" >> ${INITIALISATION_FILE}
 
@@ -99,6 +125,13 @@ start() {
     unset DATABASE_PASSWORD
     unset OWNCLOUD_ADMIN_PASSWORD
     unset LDAP_USER_PASSWORD
+
+    #Make sure mysql can write the socket file
+    if [ ! -d /var/run/mysqld ]; then
+        mkdir -p /var/run/mysqld
+        chown -R mysql /var/run/mysqld
+    fi
+
     /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
 }
 
