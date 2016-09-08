@@ -1,5 +1,5 @@
 DOCKER_IMAGE_NAME=docker.clarin.eu/owncloud
-DOCKER_IMAGE_VERSION=1.0.0
+DOCKER_IMAGE_VERSION=1.0.1
 
 all: build
 

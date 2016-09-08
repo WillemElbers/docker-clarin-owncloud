@@ -137,6 +137,8 @@ start() {
         chown -R mysql /var/run/mysqld
     fi
 
+    /usr/bin/find /var/run/ -type f -name "*.pid" -exec /bin/rm -f {} \;
+
     /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
 }
 
