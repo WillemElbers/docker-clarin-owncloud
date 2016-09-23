@@ -17,8 +17,9 @@ RUN cd /opt \
  && rm -r /var/www/html \
  && mv /opt/owncloud /var/www/html \
  && mkdir -p /var/www/html/data \
- && chown -R www-data:www-data /var/www/html \
  && rm /opt/owncloud-9.1.0.tar.bz2
+COPY config/config.php /var/www/html/config/config/php
+RUN chown -R www-data:www-data /var/www/html
 
 # Enable required apache modules
 RUN a2enmod rewrite \
