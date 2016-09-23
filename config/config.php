@@ -5,7 +5,7 @@ $CONFIG = array (
   'trusted_domains' => 
   array (
     0 => 'localhost',
-    1 => 'owncloud.localdomain',
+    1 => 'owncloud.localdomain:8082',
   ),
   'datadirectory' => '/var/www/html/data',
   'overwrite.cli.url' => 'http://localhost',
